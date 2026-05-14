@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction History</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+        }
+
+        body {
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #eef2f7,
+                #d9e7ff
+            );
+
+            min-height: 100vh;
+
+            padding: 40px;
+        }
+
+        .container {
+
+            width: 95%;
+
+            max-width: 1500px;
+
+            margin: auto;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+            box-shadow:
+                0px 10px 30px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+
+            color: #1f2937;
+
+            font-size: 42px;
+
+            letter-spacing: 1px;
+        }
+
+        .table-wrapper {
+
+            overflow-x: auto;
+
+            border-radius: 15px;
+
+            border: 1px solid #e5e7eb;
+        }
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            overflow: hidden;
+        }
+
+        thead {
+
+            background: linear-gradient(
+                90deg,
+                #007bff,
+                #0056d2
+            );
+
+            color: white;
+
+            position: sticky;
+
+            top: 0;
+        }
+
+        th {
+
+            padding: 18px;
+
+            font-size: 16px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        th:last-child {
+
+            border-right: none;
+        }
+
+        td {
+
+            padding: 16px;
+
+            text-align: center;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            color: #374151;
+
+            font-size: 15px;
+        }
+
+        tbody tr {
+
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:nth-child(even) {
+
+            background-color: #f9fbff;
+        }
+
+        tbody tr:hover {
+
+            background-color: #edf4ff;
+
+            transform: scale(1.002);
+        }
+
+        .placed {
+
+            background-color: #dcfce7;
+
+            color: #15803d;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            display: inline-block;
+        }
+
+        .not-placed {
+
+            background-color: #fee2e2;
+
+            color: #dc2626;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            display: inline-block;
+        }
+
+        .confidence {
+
+            font-weight: bold;
+
+            color: #2563eb;
+        }
+
+        .back-btn {
+
+            display: inline-block;
+
+            margin-top: 30px;
+
+            padding: 14px 24px;
+
+            background: linear-gradient(
+                90deg,
+                #007bff,
+                #0056d2
+            );
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            transition: 0.3s ease;
+        }
+
+        .back-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0px 6px 15px rgba(0,123,255,0.3);
+        }
+
+        .empty-message {
+
+            text-align: center;
+
+            padding: 40px;
+
+            font-size: 20px;
+
+            color: gray;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>
+
+            Prediction History
+
+        </h1>
+
+        {% if rows %}
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        {% for column in columns %}
+
+                        <th>
+
+                            {{ column }}
+
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for row in rows %}
+
+                    <tr>
+
+                        {% for cell in row %}
+
+                        <td>
+
+                            {% if cell == 'Placed' %}
+
+                            <span class="placed">
+
+                                {{ cell }}
+
+                            </span>
+
+                            {% elif cell == 'Not Placed' %}
+
+                            <span class="not-placed">
+
+                                {{ cell }}
+
+                            </span>
+
+                            {% elif loop.index == row|length %}
+
+                            <span class="confidence">
+
+                                {{ cell }}
+
+                            </span>
+
+                            {% else %}
+
+                            {{ cell }}
+
+                            {% endif %}
+
+                        </td>
+
+                        {% endfor %}
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-message">
+
+            No prediction history found.
+
+        </div>
+
+        {% endif %}
+
+        <a href="/"
+           class="back-btn">
+
+           ← Back to Home
+
+        </a>
+
+    </div>
+
+</body>
+
+</html>

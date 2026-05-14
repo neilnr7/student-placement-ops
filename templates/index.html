@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Placement Prediction System
+    </title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background-color: #f4f6f9;
+
+            margin: 0;
+
+            padding: 0;
+        }
+
+        .container {
+
+            width: 50%;
+
+            margin: 40px auto;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0px 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+
+            text-align: center;
+
+            color: #333;
+        }
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+        label {
+
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-weight: bold;
+
+            color: #444;
+        }
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 10px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+
+            box-sizing: border-box;
+        }
+
+        .hint {
+
+            font-size: 12px;
+
+            color: gray;
+
+            margin-top: 4px;
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 12px;
+
+            background-color: #007bff;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 6px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+
+            background-color: #0056b3;
+        }
+
+        .result {
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            background-color: #eef7ee;
+
+            border-left: 5px solid green;
+
+            border-radius: 6px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+        }
+
+        .history-link {
+
+            margin-top: 20px;
+
+            text-align: center;
+        }
+
+        .history-link a {
+
+            text-decoration: none;
+
+            color: #007bff;
+
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Placement Prediction System
+        </h1>
+
+        <form
+            action="/predict"
+            method="post"
+        >
+
+            <!-- CGPA -->
+
+            <div class="form-group">
+
+                <label>CGPA</label>
+
+                <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="10"
+                    name="CGPA"
+                    placeholder="Enter CGPA"
+                    required
+                    value="{{ form_data.CGPA if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 7.5 to 9.5
+                </div>
+
+            </div>
+
+            <!-- Internships -->
+
+            <div class="form-group">
+
+                <label>Internships</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    name="Internships"
+                    placeholder="Number of internships"
+                    required
+                    value="{{ form_data.Internships if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 0 to 5
+                </div>
+
+            </div>
+
+            <!-- Projects -->
+
+            <div class="form-group">
+
+                <label>Projects</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="20"
+                    name="Projects"
+                    placeholder="Projects completed"
+                    required
+                    value="{{ form_data.Projects if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 1 to 10
+                </div>
+
+            </div>
+
+            <!-- Workshops -->
+
+            <div class="form-group">
+
+                <label>
+                    Workshops / Certifications
+                </label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="20"
+                    name="Workshops_Certifications"
+                    placeholder="Certifications completed"
+                    required
+                    value="{{ form_data.Workshops_Certifications if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 0 to 10
+                </div>
+
+            </div>
+
+            <!-- Aptitude -->
+
+            <div class="form-group">
+
+                <label>
+                    Aptitude Test Score
+                </label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    name="AptitudeTestScore"
+                    placeholder="Enter aptitude score"
+                    required
+                    value="{{ form_data.AptitudeTestScore if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 60 to 100
+                </div>
+
+            </div>
+
+            <!-- Soft Skills -->
+
+            <div class="form-group">
+
+                <label>
+                    Soft Skills Rating
+                </label>
+
+                <input
+                    type="number"
+                    step="0.1"
+                    min="1"
+                    max="5"
+                    name="SoftSkillsRating"
+                    placeholder="Communication skills rating"
+                    required
+                    value="{{ form_data.SoftSkillsRating if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 1.0 to 5.0
+                </div>
+
+            </div>
+
+            <!-- Extracurricular -->
+
+            <div class="form-group">
+
+                <label>
+                    Extracurricular Activities
+                </label>
+
+                <select
+                    name="ExtracurricularActivities"
+                >
+
+                    <option
+                        value="Yes"
+                        {% if form_data and form_data.ExtracurricularActivities == 'Yes' %}
+                        selected
+                        {% endif %}
+                    >
+                        Yes
+                    </option>
+
+                    <option
+                        value="No"
+                        {% if form_data and form_data.ExtracurricularActivities == 'No' %}
+                        selected
+                        {% endif %}
+                    >
+                        No
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Placement Training -->
+
+            <div class="form-group">
+
+                <label>
+                    Placement Training
+                </label>
+
+                <select
+                    name="PlacementTraining"
+                >
+
+                    <option
+                        value="Yes"
+                        {% if form_data and form_data.PlacementTraining == 'Yes' %}
+                        selected
+                        {% endif %}
+                    >
+                        Yes
+                    </option>
+
+                    <option
+                        value="No"
+                        {% if form_data and form_data.PlacementTraining == 'No' %}
+                        selected
+                        {% endif %}
+                    >
+                        No
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- SSC -->
+
+            <div class="form-group">
+
+                <label>
+                    SSC Marks
+                </label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    name="SSC_Marks"
+                    placeholder="10th percentage"
+                    required
+                    value="{{ form_data.SSC_Marks if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 50 to 100
+                </div>
+
+            </div>
+
+            <!-- HSC -->
+
+            <div class="form-group">
+
+                <label>
+                    HSC Marks
+                </label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    name="HSC_Marks"
+                    placeholder="12th percentage"
+                    required
+                    value="{{ form_data.HSC_Marks if form_data else '' }}"
+                >
+
+                <div class="hint">
+                    Example: 50 to 100
+                </div>
+
+            </div>
+
+            <!-- Button -->
+
+            <button type="submit">
+
+                Predict Placement
+
+            </button>
+
+        </form>
+
+        <!-- Result -->
+
+        {% if prediction_text %}
+
+        <div class="result">
+
+            {{ prediction_text }}
+
+        </div>
+
+        {% endif %}
+
+        <!-- History Link -->
+
+        <div class="history-link">
+
+            <a href="/history">
+
+                View Prediction History
+
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
