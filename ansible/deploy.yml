@@ -1,0 +1,26 @@
+---
+- hosts: aws
+  become: yes
+
+  tasks:
+
+    - name: Pull latest code
+      git:
+        repo: https://github.com/neilnr7/student-placement-ops.git
+        dest: /home/ubuntu/student-placement-ops
+        version: main
+        force: yes
+
+    - name: Stop old container
+      shell: docker stop placement-container || true
+
+    - name: Remove old container
+      shell: docker rm placement-container || true
+
+    - name: Build Docker image
+      shell: docker build -t placement-app -f docker/dockerfile .
+      args:
+        chdir: /home/ubuntu/student-placement-ops
+
+    - name: Run Docker container
+      shell: docker run -d -p 5001:5000 --name placement-container placement-app
