@@ -4,3 +4,5 @@ venv/
 .env
 mlruns/
 backup/
+ansible/inventory.ini
+*.pem
